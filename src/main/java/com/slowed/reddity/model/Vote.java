@@ -20,17 +20,17 @@ public class Vote {
 
   @Id
   @GeneratedValue(strategy = IDENTITY)
-  private Long id;
+  private Long voteId;
 
   private VoteType voteType;
 
   @NotNull
   @ManyToOne(fetch = LAZY)
-  @JoinColumn(name = "id", referencedColumnName = "id")
+  @JoinColumn(name = "postId", referencedColumnName = "postId")
   private Post post;
 
   @ManyToOne(fetch = LAZY)
-  @JoinColumn(name = "id", referencedColumnName = "id")
+  @JoinColumn(name = "userId", referencedColumnName = "userId")
   private User user;
 
 }
