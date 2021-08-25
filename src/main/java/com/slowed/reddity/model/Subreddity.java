@@ -22,7 +22,7 @@ public class Subreddity {
 
   @Id
   @GeneratedValue(strategy = IDENTITY)
-  private Long id;
+  private Long subreddityId;
 
   @NotBlank(message = "community name is required")
   private String name;
