@@ -19,7 +19,7 @@ public class VerificationToken {
 
   @Id
   @GeneratedValue(strategy = IDENTITY)
-  private Long id;
+  private Long verificationTokenId;
 
   private String token;
 
