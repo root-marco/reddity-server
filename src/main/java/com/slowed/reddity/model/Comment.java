@@ -19,19 +19,19 @@ public class Comment {
 
   @Id
   @GeneratedValue(strategy = IDENTITY)
-  private Long id;
+  private Long commentId;
 
   @NotEmpty
   private String text;
 
   @ManyToOne(fetch = LAZY)
-  @JoinColumn(name = "id", referencedColumnName = "id")
+  @JoinColumn(name = "postId", referencedColumnName = "postId")
   private Post post;
 
   private Instant createdDate;
 
   @ManyToOne(fetch = LAZY)
-  @JoinColumn(name = "id", referencedColumnName = "id")
+  @JoinColumn(name = "userId", referencedColumnName = "userId")
   private User user;
 
 }
