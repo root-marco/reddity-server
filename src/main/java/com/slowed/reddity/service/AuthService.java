@@ -1,6 +1,7 @@
 package com.slowed.reddity.service;
 
 import com.slowed.reddity.dto.RegisterRequest;
+import com.slowed.reddity.model.NotificationEmail;
 import com.slowed.reddity.model.User;
 import com.slowed.reddity.model.VerificationToken;
 import com.slowed.reddity.repository.UserRepository;
@@ -15,13 +16,14 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class AuthService {
 
   private final PasswordEncoder passwordEncoder;
   private final UserRepository userRepository;
   private final VerificationTokenRepository verificationTokenRepository;
+  private final MailService mailService;
 
-  @Transactional
   public void signup(RegisterRequest registerRequest) {
 
     User user = new User();
@@ -34,6 +36,15 @@ public class AuthService {
     userRepository.save(user);
 
     String token = generateVerificationToken(user);
+
+    mailService.sendMail(
+        new NotificationEmail(
+        "please activate your account", user.getEmail(),
+        "thank you for signing up to Reddity, " +
+        "please click on the below url to activate your account : " +
+        "http://localhost:8080/api/auth/accountVerification/" + token
+      )
+    );
 
   }
 
