@@ -1,6 +1,7 @@
 package com.slowed.reddity.service;
 
 import com.slowed.reddity.dto.RegisterRequest;
+import com.slowed.reddity.exceptions.SpringReddityException;
 import com.slowed.reddity.model.NotificationEmail;
 import com.slowed.reddity.model.User;
 import com.slowed.reddity.model.VerificationToken;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -58,6 +60,24 @@ public class AuthService {
     verificationTokenRepository.save(verificationToken);
 
     return token;
+
+  }
+
+  public void verifyAccount(String token) {
+
+    Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
+    verificationToken.orElseThrow(() -> new SpringReddityException("invalid token"));
+    fetchUserAndEnable(verificationToken.get());
+
+  }
+
+  private void fetchUserAndEnable(VerificationToken verificationToken) {
+
+    String username = verificationToken.getUser().getUsername();
+    User user = userRepository.findByUsername(username)
+      .orElseThrow(() -> new SpringReddityException("user not found: " + username));
+    user.setEnabled(true);
+    userRepository.save(user);
 
   }
 

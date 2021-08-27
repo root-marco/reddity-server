@@ -1,6 +1,6 @@
 package com.slowed.reddity.service;
 
-import com.slowed.reddity.exceptions.SpringRedditException;
+import com.slowed.reddity.exceptions.SpringReddityException;
 import com.slowed.reddity.model.NotificationEmail;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public class MailService {
       log.info("activation email sent!");
     } catch (MailException e) {
       log.error("exception occurred when sending mail", e);
-      throw new SpringRedditException("exception occurred when sending mail to " + notificationEmail.getRecipient(), e);
+      throw new SpringReddityException("exception occurred when sending mail to " + notificationEmail.getRecipient(), e);
     }
 
   }

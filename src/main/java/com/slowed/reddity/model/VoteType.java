@@ -1,6 +1,6 @@
 package com.slowed.reddity.model;
 
-import com.slowed.reddity.exceptions.SpringRedditException;
+import com.slowed.reddity.exceptions.SpringReddityException;
 
 import java.util.Arrays;
 
@@ -18,7 +18,7 @@ public enum VoteType {
     return Arrays.stream(VoteType.values())
       .filter(value -> value.getDirection().equals(direction))
       .findAny()
-      .orElseThrow(() -> new SpringRedditException("vote not found"));
+      .orElseThrow(() -> new SpringReddityException("vote not found"));
   }
 
   public Integer getDirection() {
