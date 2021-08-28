@@ -1,5 +1,7 @@
 package com.slowed.reddity.service;
 
+import com.slowed.reddity.dto.AuthenticationResponse;
+import com.slowed.reddity.dto.LoginRequest;
 import com.slowed.reddity.dto.RegisterRequest;
 import com.slowed.reddity.exceptions.SpringReddityException;
 import com.slowed.reddity.model.NotificationEmail;
@@ -7,7 +9,12 @@ import com.slowed.reddity.model.User;
 import com.slowed.reddity.model.VerificationToken;
 import com.slowed.reddity.repository.UserRepository;
 import com.slowed.reddity.repository.VerificationTokenRepository;
+import com.slowed.reddity.security.JwtProvider;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +31,9 @@ public class AuthService {
   private final PasswordEncoder passwordEncoder;
   private final UserRepository userRepository;
   private final VerificationTokenRepository verificationTokenRepository;
+  private final AuthenticationManager authenticationManager;
   private final MailService mailService;
+  private final JwtProvider jwtProvider;
 
   public void signup(RegisterRequest registerRequest) {
 
@@ -34,9 +43,7 @@ public class AuthService {
     user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
     user.setCreated(Instant.now());
     user.setEnabled(false);
-
     userRepository.save(user);
-
     String token = generateVerificationToken(user);
 
     mailService.sendMail(
@@ -56,10 +63,18 @@ public class AuthService {
     VerificationToken verificationToken = new VerificationToken();
     verificationToken.setToken(token);
     verificationToken.setUser(user);
-
     verificationTokenRepository.save(verificationToken);
-
     return token;
+
+  }
+
+  public AuthenticationResponse login(LoginRequest loginRequest) {
+
+    Authentication authenticate = authenticationManager
+      .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+    SecurityContextHolder.getContext().setAuthentication(authenticate);
+    String authenticationToken = jwtProvider.generateToken(authenticate);
+    return new AuthenticationResponse(authenticationToken, loginRequest.getUsername());
 
   }
 
