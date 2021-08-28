@@ -1,5 +1,7 @@
 package com.slowed.reddity.controller;
 
+import com.slowed.reddity.dto.AuthenticationResponse;
+import com.slowed.reddity.dto.LoginRequest;
 import com.slowed.reddity.dto.RegisterRequest;
 import com.slowed.reddity.service.AuthService;
 import lombok.AllArgsConstructor;
@@ -19,6 +21,13 @@ public class AuthController {
 
     authService.signup(registerRequest);
     return new ResponseEntity<>("user registration successful", HttpStatus.OK);
+
+  }
+
+  @PostMapping("/login")
+  public AuthenticationResponse login(@RequestBody LoginRequest loginRequest) {
+
+    return authService.login(loginRequest);
 
   }
 
