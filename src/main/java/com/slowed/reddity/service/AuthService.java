@@ -28,12 +28,12 @@ import java.util.UUID;
 @Transactional
 public class AuthService {
 
-  private final PasswordEncoder passwordEncoder;
-  private final UserRepository userRepository;
   private final VerificationTokenRepository verificationTokenRepository;
   private final AuthenticationManager authenticationManager;
-  private final MailService mailService;
+  private final PasswordEncoder passwordEncoder;
+  private final UserRepository userRepository;
   private final JwtProvider jwtProvider;
+  private final MailService mailService;
 
   public void signup(RegisterRequest registerRequest) {
 
@@ -70,8 +70,9 @@ public class AuthService {
 
   public AuthenticationResponse login(LoginRequest loginRequest) {
 
-    Authentication authenticate = authenticationManager
-      .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+    Authentication authenticate = authenticationManager.authenticate(
+      new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+    );
     SecurityContextHolder.getContext().setAuthentication(authenticate);
     String authenticationToken = jwtProvider.generateToken(authenticate);
     return new AuthenticationResponse(authenticationToken, loginRequest.getUsername());
@@ -81,7 +82,8 @@ public class AuthService {
   public void verifyAccount(String token) {
 
     Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
-    verificationToken.orElseThrow(() -> new SpringReddityException("invalid token"));
+    verificationToken.orElseThrow(() ->
+      new SpringReddityException("invalid token"));
     fetchUserAndEnable(verificationToken.get());
 
   }
@@ -89,8 +91,8 @@ public class AuthService {
   private void fetchUserAndEnable(VerificationToken verificationToken) {
 
     String username = verificationToken.getUser().getUsername();
-    User user = userRepository.findByUsername(username)
-      .orElseThrow(() -> new SpringReddityException("user not found: " + username));
+    User user = userRepository.findByUsername(username).orElseThrow(() ->
+      new SpringReddityException("user not found: " + username));
     user.setEnabled(true);
     userRepository.save(user);
 
