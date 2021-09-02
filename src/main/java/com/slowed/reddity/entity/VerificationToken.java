@@ -1,4 +1,4 @@
-package com.slowed.reddity.model;
+package com.slowed.reddity.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
