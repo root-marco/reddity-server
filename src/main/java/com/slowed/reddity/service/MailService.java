@@ -1,7 +1,7 @@
 package com.slowed.reddity.service;
 
 import com.slowed.reddity.exceptions.SpringReddityException;
-import com.slowed.reddity.model.NotificationEmail;
+import com.slowed.reddity.entity.NotificationEmail;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailException;
