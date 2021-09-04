@@ -3,7 +3,7 @@ package com.slowed.reddity.service;
 import com.slowed.reddity.dto.SubreddityDTO;
 import com.slowed.reddity.exceptions.SpringReddityException;
 import com.slowed.reddity.mapper.SubreddityMapper;
-import com.slowed.reddity.model.Subreddity;
+import com.slowed.reddity.entity.Subreddity;
 import com.slowed.reddity.repository.SubreddityRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class SubreddityService {
 
     Subreddity save = subreddityRepository.save(subreddityMapper.mapDTOToSubreddity(subreddityDTO));
 
-    subreddityDTO.setId(save.getSubreddityId());
+    subreddityDTO.setSubreddityId(save.getSubreddityId());
 
     return subreddityDTO;
 
@@ -46,8 +46,7 @@ public class SubreddityService {
 
   public SubreddityDTO getSubreddity(Long id) {
 
-    Subreddity subreddity = subreddityRepository
-      .findById(id)
+    Subreddity subreddity = subreddityRepository.findById(id)
       .orElseThrow(() -> new SpringReddityException("no subreddity found with ID - " + id));
 
     return subreddityMapper.mapSubreddityToDTO(subreddity);
