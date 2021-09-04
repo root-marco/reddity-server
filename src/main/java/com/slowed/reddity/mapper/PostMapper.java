@@ -2,9 +2,9 @@ package com.slowed.reddity.mapper;
 
 import com.slowed.reddity.dto.PostRequest;
 import com.slowed.reddity.dto.PostResponse;
-import com.slowed.reddity.model.Post;
-import com.slowed.reddity.model.Subreddity;
-import com.slowed.reddity.model.User;
+import com.slowed.reddity.entity.Post;
+import com.slowed.reddity.entity.Subreddity;
+import com.slowed.reddity.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

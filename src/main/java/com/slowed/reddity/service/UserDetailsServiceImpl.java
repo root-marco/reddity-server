@@ -1,6 +1,6 @@
 package com.slowed.reddity.service;
 
-import com.slowed.reddity.model.User;
+import com.slowed.reddity.entity.User;
 import com.slowed.reddity.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

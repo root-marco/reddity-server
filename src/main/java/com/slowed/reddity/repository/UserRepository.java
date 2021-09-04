@@ -1,6 +1,6 @@
 package com.slowed.reddity.repository;
 
-import com.slowed.reddity.model.User;
+import com.slowed.reddity.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
