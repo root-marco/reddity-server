@@ -1,8 +1,6 @@
 package com.slowed.reddity.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -19,7 +17,7 @@ public class Comment {
 
   @Id
   @GeneratedValue(strategy = IDENTITY)
-  private Long commentId;
+  private Long id;
 
   @NotEmpty
   private String text;
