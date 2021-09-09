@@ -2,6 +2,7 @@ package com.slowed.reddity.service;
 
 import com.slowed.reddity.dto.AuthenticationResponse;
 import com.slowed.reddity.dto.LoginRequest;
+import com.slowed.reddity.dto.RefreshTokenRequest;
 import com.slowed.reddity.dto.RegisterRequest;
 import com.slowed.reddity.exceptions.SpringReddityException;
 import com.slowed.reddity.entity.NotificationEmail;
@@ -32,6 +33,7 @@ import java.util.UUID;
 public class AuthService {
 
   private final VerificationTokenRepository verificationTokenRepository;
+  private final RefreshTokenService refreshTokenService;
   private final AuthenticationManager authenticationManager;
   private final PasswordEncoder passwordEncoder;
   private final UserRepository userRepository;
@@ -88,9 +90,17 @@ public class AuthService {
     Authentication authenticate = authenticationManager.authenticate(
       new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
     );
+
     SecurityContextHolder.getContext().setAuthentication(authenticate);
+
     String authenticationToken = jwtProvider.generateToken(authenticate);
-    return new AuthenticationResponse(authenticationToken, loginRequest.getUsername());
+
+    return AuthenticationResponse.builder()
+      .authenticationToken(authenticationToken)
+      .refreshToken(refreshTokenService.generateRefreshToken().getToken())
+      .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+      .username(loginRequest.getUsername())
+      .build();
 
   }
 
@@ -117,6 +127,21 @@ public class AuthService {
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
+
+  }
+
+  public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+
+    refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
+
+    String token = jwtProvider.generateTokenWithUserName(refreshTokenRequest.getUsername());
+
+    return AuthenticationResponse.builder()
+      .authenticationToken(token)
+      .refreshToken(refreshTokenRequest.getRefreshToken())
+      .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+      .username(refreshTokenRequest.getUsername())
+      .build();
 
   }
 
